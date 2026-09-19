@@ -1,0 +1,67 @@
+CREATE TABLE public.employees (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text NOT NULL,
+  phone text,
+  hourly_rate numeric NOT NULL DEFAULT 0,
+  ot_rate numeric NOT NULL DEFAULT 0,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.employees TO anon, authenticated;
+GRANT ALL ON public.employees TO service_role;
+ALTER TABLE public.employees ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public full access to employees" ON public.employees FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+CREATE TABLE public.attendance (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  employee_id uuid NOT NULL REFERENCES public.employees(id) ON DELETE CASCADE,
+  work_date date NOT NULL,
+  status text NOT NULL DEFAULT 'Present',
+  in_time text,
+  out_time text,
+  advance numeric NOT NULL DEFAULT 0,
+  notes text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (employee_id, work_date)
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.attendance TO anon, authenticated;
+GRANT ALL ON public.attendance TO service_role;
+ALTER TABLE public.attendance ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public full access to attendance" ON public.attendance FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+INSERT INTO public.employees (id, name, phone, hourly_rate, ot_rate)
+VALUES ('11111111-1111-1111-1111-111111111111', 'Ravi', '963852741', 62.5, 62.5);
+
+INSERT INTO public.attendance (employee_id, work_date, status, in_time, out_time, advance) VALUES
+('11111111-1111-1111-1111-111111111111','2026-08-01','Present','08:00','13:30',0),
+('11111111-1111-1111-1111-111111111111','2026-08-02','Advance',NULL,NULL,2000),
+('11111111-1111-1111-1111-111111111111','2026-08-03','Leave',NULL,NULL,0),
+('11111111-1111-1111-1111-111111111111','2026-08-04','Present','08:00','21:45',0),
+('11111111-1111-1111-1111-111111111111','2026-08-05','Present','08:00','19:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-06','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-07','Present','08:00','22:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-08','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-09','Leave',NULL,NULL,0),
+('11111111-1111-1111-1111-111111111111','2026-08-10','Leave',NULL,NULL,0),
+('11111111-1111-1111-1111-111111111111','2026-08-11','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-12','Leave',NULL,NULL,0),
+('11111111-1111-1111-1111-111111111111','2026-08-13','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-14','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-15','Present','08:00','20:30',0),
+('11111111-1111-1111-1111-111111111111','2026-08-16','Advance',NULL,NULL,1500),
+('11111111-1111-1111-1111-111111111111','2026-08-17','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-18','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-19','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-20','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-21','Present','08:00','21:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-22','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-23','Advance','18:00','21:30',2000),
+('11111111-1111-1111-1111-111111111111','2026-08-24','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-25','Present','08:00','19:30',0),
+('11111111-1111-1111-1111-111111111111','2026-08-26','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-27','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-28','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-29','Present','08:00','20:00',0),
+('11111111-1111-1111-1111-111111111111','2026-08-30','Advance',NULL,NULL,1000),
+('11111111-1111-1111-1111-111111111111','2026-08-31','Present','08:00','20:00',0);
