@@ -14,7 +14,77 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      attendance: {
+        Row: {
+          advance: number
+          created_at: string
+          employee_id: string
+          id: string
+          in_time: string | null
+          notes: string | null
+          out_time: string | null
+          status: string
+          work_date: string
+        }
+        Insert: {
+          advance?: number
+          created_at?: string
+          employee_id: string
+          id?: string
+          in_time?: string | null
+          notes?: string | null
+          out_time?: string | null
+          status?: string
+          work_date: string
+        }
+        Update: {
+          advance?: number
+          created_at?: string
+          employee_id?: string
+          id?: string
+          in_time?: string | null
+          notes?: string | null
+          out_time?: string | null
+          status?: string
+          work_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employees: {
+        Row: {
+          created_at: string
+          hourly_rate: number
+          id: string
+          name: string
+          ot_rate: number
+          phone: string | null
+        }
+        Insert: {
+          created_at?: string
+          hourly_rate?: number
+          id?: string
+          name: string
+          ot_rate?: number
+          phone?: string | null
+        }
+        Update: {
+          created_at?: string
+          hourly_rate?: number
+          id?: string
+          name?: string
+          ot_rate?: number
+          phone?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
